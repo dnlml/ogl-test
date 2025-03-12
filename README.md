@@ -117,6 +117,44 @@ const mesh = new Mesh(gl, { geometry, program });
 mesh.setParent(scene);
 ```
 
+## Risoluzione dei problemi
+
+Se riscontri problemi durante l'esecuzione del progetto, ecco alcune soluzioni comuni:
+
+### Errori di WebGL
+
+1. **WebGL non supportato**: Assicurati che il tuo browser supporti WebGL. Puoi verificarlo visitando [webglreport.com](https://webglreport.com/).
+
+2. **Errori di contesto WebGL**: Se vedi errori come "WebGL context lost" o "Unable to initialize WebGL", prova a:
+   - Aggiornare il browser
+   - Abilitare l'accelerazione hardware
+   - Aggiornare i driver della scheda grafica
+
+3. **Problemi di performance**: Se l'animazione è lenta o scattosa:
+   - Riduci il numero di particelle (nel componente OglParticles)
+   - Diminuisci la complessità delle geometrie
+   - Usa un valore più basso per `dpr` nel renderer
+
+### Errori di Svelte/SvelteKit
+
+1. **Problemi con le runes di Svelte 5**: Se vedi errori relativi a `$state` o altre runes:
+   - Assicurati di usare una versione compatibile di Svelte 5 (almeno la next.58)
+   - Verifica la sintassi delle runes nel file `+page.svelte`
+
+2. **Errori di importazione**: Se vedi errori come "Cannot find module 'ogl'":
+   - Esegui `pnpm install` per assicurarti che tutte le dipendenze siano installate
+   - Verifica che il file package.json contenga la dipendenza `ogl`
+
+3. **Errori di SSR**: Se vedi errori durante il rendering lato server:
+   - Assicurati che l'importazione di OGL avvenga solo nel browser usando `onMount` e import dinamici
+
+### Problemi di texture
+
+Se la sfera non mostra la texture:
+1. Verifica che l'URL dell'immagine sia accessibile
+2. Controlla la console per errori CORS
+3. Prova a usare un'immagine locale nella cartella `static`
+
 ## Risorse
 
 - [Documentazione OGL](https://github.com/oframe/ogl)
