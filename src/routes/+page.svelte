@@ -11,13 +11,19 @@
 
   // Carica i componenti dinamicamente per evitare problemi di SSR
   onMount(async () => {
-    const sceneModule = await import("$lib/components/OglScene.svelte");
-    const sphereModule = await import("$lib/components/OglSphere.svelte");
-    const particlesModule = await import("$lib/components/OglParticles.svelte");
+    try {
+      const sceneModule = await import("$lib/components/OglScene.svelte");
+      const sphereModule = await import("$lib/components/OglSphere.svelte");
+      const particlesModule = await import(
+        "$lib/components/OglParticles.svelte"
+      );
 
-    OglScene = sceneModule.default;
-    OglSphere = sphereModule.default;
-    OglParticles = particlesModule.default;
+      OglScene = sceneModule.default;
+      OglSphere = sphereModule.default;
+      OglParticles = particlesModule.default;
+    } catch (error) {
+      console.error("Errore nel caricamento dei componenti:", error);
+    }
   });
 
   // Cambia demo
