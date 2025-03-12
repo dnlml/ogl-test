@@ -3,26 +3,31 @@
   // Pagina principale che permette di selezionare i diversi esempi OGL
   
   import { onMount } from 'svelte';
+  import { state } from 'svelte/internal';
   
-  let selectedDemo = $state('cube');
+  const selectedDemo = state('cube');
   let OglScene: any;
   let OglSphere: any;
   let OglParticles: any;
   
   // Carica i componenti dinamicamente per evitare problemi di SSR
   onMount(async () => {
-    const sceneModule = await import('$lib/components/OglScene.svelte');
-    const sphereModule = await import('$lib/components/OglSphere.svelte');
-    const particlesModule = await import('$lib/components/OglParticles.svelte');
-    
-    OglScene = sceneModule.default;
-    OglSphere = sphereModule.default;
-    OglParticles = particlesModule.default;
+    try {
+      const sceneModule = await import('$lib/components/OglScene.svelte');
+      const sphereModule = await import('$lib/components/OglSphere.svelte');
+      const particlesModule = await import('$lib/components/OglParticles.svelte');
+      
+      OglScene = sceneModule.default;
+      OglSphere = sphereModule.default;
+      OglParticles = particlesModule.default;
+    } catch (error) {
+      console.error('Errore nel caricamento dei componenti:', error);
+    }
   });
   
   // Cambia demo
   function selectDemo(demo: string) {
-    selectedDemo = demo;
+    selectedDemo.set(demo);
   }
 </script>
 
@@ -37,17 +42,17 @@
     
     <nav>
       <button 
-        class:active={selectedDemo === 'cube'} 
+        class:active={$selectedDemo === 'cube'} 
         on:click={() => selectDemo('cube')}>
         Cubo
       </button>
       <button 
-        class:active={selectedDemo === 'sphere'} 
+        class:active={$selectedDemo === 'sphere'} 
         on:click={() => selectDemo('sphere')}>
         Sfera con Texture
       </button>
       <button 
-        class:active={selectedDemo === 'particles'} 
+        class:active={$selectedDemo === 'particles'} 
         on:click={() => selectDemo('particles')}>
         Sistema di Particelle
       </button>
@@ -55,11 +60,11 @@
   </header>
   
   <main>
-    {#if selectedDemo === 'cube' && OglScene}
+    {#if $selectedDemo === 'cube' && OglScene}
       <svelte:component this={OglScene} />
-    {:else if selectedDemo === 'sphere' && OglSphere}
+    {:else if $selectedDemo === 'sphere' && OglSphere}
       <svelte:component this={OglSphere} />
-    {:else if selectedDemo === 'particles' && OglParticles}
+    {:else if $selectedDemo === 'particles' && OglParticles}
       <svelte:component this={OglParticles} />
     {:else}
       <div class="loading">
